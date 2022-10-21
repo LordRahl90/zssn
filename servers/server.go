@@ -1,8 +1,6 @@
 package servers
 
 import (
-	"strings"
-
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
@@ -23,11 +21,4 @@ func New(db *gorm.DB) *Server {
 		DB:     db,
 		Router: router,
 	}
-}
-
-func (s *Server) Start(port string) error {
-	if !strings.HasPrefix(port, ":") {
-		port = ":" + port
-	}
-	return s.Router.Listen(port)
 }
