@@ -46,15 +46,5 @@ jobs:
           go-version: 1.19
 
       - name: Test
-        run: make test
-
-      - name: Notify
-        if: always()
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_CHANNEL: build-process
-          SLACK_COLOR: ${{ job.status }}
-          SLACK_MESSAGE: 'Test Completed :)'
-          SLACK_USERNAME: BuildMonitor
-          SLACK_WEBHOOK: ${{ secrets.SLACK_HOOK }}
+        run: ENVIRONMENT=cicd make test
 
