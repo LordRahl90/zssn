@@ -13,7 +13,9 @@ type Server struct {
 
 // New creates a new instance of the server
 func New(db *gorm.DB) *Server {
-	router := fiber.New()
+	router := fiber.New(fiber.Config{
+		EnablePrintRoutes: true,
+	})
 	router.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Welcome to Zombie Survival Social Network API")
 	})

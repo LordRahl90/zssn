@@ -1,11 +1,13 @@
 package users
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
-type UserServiceImpl struct {
+type UserService struct {
 	DB *gorm.DB
 }
 
-func New(db *gorm.DB) (UserService, error) {
+func New(db *gorm.DB) (*IUserService, error) {
 	return nil, nil
 }
