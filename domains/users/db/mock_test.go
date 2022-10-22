@@ -41,5 +41,5 @@ func TestMockCreateFunctionNotDefined(t *testing.T) {
 	u := newUser(t)
 	mockSVC := &MockUserStorage{}
 	err := mockSVC.Create(ctx, u)
-	require.EqualError(t, err, "create function not defined")
+	require.EqualError(t, err, "mock function not defined")
 }

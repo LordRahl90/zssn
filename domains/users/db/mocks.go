@@ -6,8 +6,9 @@ import (
 )
 
 var (
-	_                 IUserStorage = (*MockUserStorage)(nil)
-	errMockNotDefined              = errors.New("mock function not defined")
+	_ IUserStorage = (*MockUserStorage)(nil)
+
+	errMockNotDefined = errors.New("mock function not defined")
 )
 
 // MockUserStorage returns a mocked storage object
