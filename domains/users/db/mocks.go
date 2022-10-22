@@ -18,7 +18,6 @@ type MockUserStorage struct {
 	UpdateInfectedStatusFunc func(ctx context.Context, id string) error
 	FindFunc                 func(ctx context.Context, id string) (*User, error)
 	FindByEmailFunc          func(ctx context.Context, email string) (*User, error)
-	FlagAsInfectedFunc       func(ctx context.Context, id string, infectedUser string) error
 	UpdateLocationFunc       func(ctx context.Context, id string, lat float64, long float64) error
 }
 
@@ -32,7 +31,7 @@ func (m *MockUserStorage) FlagUser(ctx context.Context, id string, infectedUser 
 
 // UpdateInfectedStatus implements IUserStorage
 func (m *MockUserStorage) UpdateInfectedStatus(ctx context.Context, id string) error {
-	if m.FindByEmailFunc == nil {
+	if m.UpdateInfectedStatusFunc == nil {
 		return errMockNotDefined
 	}
 	return m.UpdateInfectedStatusFunc(ctx, id)
@@ -43,7 +42,7 @@ func (m *MockUserStorage) Find(ctx context.Context, id string) (*User, error) {
 	if m.FindFunc == nil {
 		return nil, errMockNotDefined
 	}
-	return m.FindByEmailFunc(ctx, id)
+	return m.FindFunc(ctx, id)
 }
 
 // FindByEmail implements IUserStorage
@@ -52,14 +51,6 @@ func (m *MockUserStorage) FindByEmail(ctx context.Context, email string) (*User,
 		return nil, errMockNotDefined
 	}
 	return m.FindByEmailFunc(ctx, email)
-}
-
-// FlagAsInfected implements IUserStorage
-func (m *MockUserStorage) FlagAsInfected(ctx context.Context, id string, infectedUser string) error {
-	if m.FlagAsInfectedFunc == nil {
-		return errMockNotDefined
-	}
-	return m.FlagAsInfected(ctx, id, infectedUser)
 }
 
 // UpdateLocation implements IUserStorage

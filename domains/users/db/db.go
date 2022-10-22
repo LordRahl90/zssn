@@ -35,6 +35,7 @@ func (u *UserStorage) FlagUser(ctx context.Context, id string, infectedUser stri
 		return nil
 	}
 	f := FlagMonitor{
+		ID:             uuid.NewString(),
 		UserID:         id,
 		InfectedUserID: infectedUser,
 	}
@@ -49,14 +50,14 @@ func (u *UserStorage) UpdateInfectedStatus(ctx context.Context, id string) error
 // Find implements IUserStorage
 func (u *UserStorage) Find(ctx context.Context, id string) (*User, error) {
 	var user *User
-	err := u.DB.Preload("FlagMonitor").Where("id = ?", id).First(&user).Error
+	err := u.DB.Model(&User{}).Preload("FlagMonitor").Where("id = ?", id).First(&user).Error
 	return user, err
 }
 
 // FindByEmail implements IUserStorage
 func (u *UserStorage) FindByEmail(ctx context.Context, email string) (*User, error) {
 	var user *User
-	err := u.DB.Preload("FlagMonitor").Where("email = ?", email).First(&user).Error
+	err := u.DB.Preload("FlagMonitor").Where("email = ?", email).Debug().First(&user).Error
 	return user, err
 }
 

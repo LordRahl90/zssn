@@ -2,7 +2,6 @@ package servers
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -25,7 +24,6 @@ func TestMain(m *testing.M) {
 }
 
 func TestLandingPage(t *testing.T) {
-	fmt.Printf("\n\nENV: %s\n\n", os.Getenv("ENVIRONMENT"))
 	res := handleReqest(t, http.MethodGet, "/", "")
 	body, err := io.ReadAll(res.Body)
 	require.NoError(t, err)
