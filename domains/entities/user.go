@@ -36,6 +36,7 @@ func (u *User) ToUserDBEntity() *store.User {
 	}
 }
 
+// FromUserDBEntity returns a service entity from the db entity
 func FromUserDBEntity(m *store.User) *User {
 	if m == nil {
 		return nil
