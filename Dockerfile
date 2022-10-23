@@ -18,3 +18,5 @@ WORKDIR /
 COPY --from=build /app/zssn zssn
 
 EXPOSE 8080
+
+ENTRYPOINT [ "./zssn" ]

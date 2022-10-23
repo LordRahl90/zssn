@@ -1,9 +1,15 @@
 package inventory
 
-import "context"
+import (
+	"context"
+	"zssn/domains/core"
+	"zssn/domains/entities"
+)
 
-type InventoryService interface {
-	Create(ctx context.Context)
-	Get(ctx context.Context)
-	Update(ctx context.Context)
+type IInventoryService interface {
+	Create(ctx context.Context, item []*entities.Inventory) error
+	FindUserInventory(ctx context.Context, userID string) (map[core.Item]*entities.Inventory, error)
+	FindMultipleInventory(ctx context.Context, userIDs ...string) (map[string]map[core.Item]*entities.Inventory, error)
+	BlockUserInventory(ctx context.Context, userID string) error
+	UpdateBalance(ctx context.Context, userID string, item core.Item, newBalance uint32) error
 }

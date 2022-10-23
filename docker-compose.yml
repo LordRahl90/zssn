@@ -1,0 +1,7 @@
+version: '3.1'
+services:
+  zssn:
+    container_name: zssn
+    image: gcr.io/neurons-be-test/zssn:latest
+    ports:
+      - 8080:8080

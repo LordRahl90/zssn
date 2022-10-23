@@ -1,6 +1,9 @@
 package servers
 
 import (
+	"os"
+	"time"
+
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
@@ -18,6 +21,11 @@ func New(db *gorm.DB) *Server {
 	})
 	router.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Welcome to Zombie Survival Social Network API")
+	})
+
+	router.Get("/health", func(c *fiber.Ctx) error {
+		env := os.Getenv("ENVIRONMENT")
+		return c.SendString("Server Environment " + env + " all green by " + time.Now().String())
 	})
 	return &Server{
 		DB:     db,

@@ -1,8 +1,15 @@
 package store
 
-import "context"
+import (
+	"context"
+	"zssn/domains/core"
+)
 
 // IInventoryStore inventory store interface
-type IInventoryStore interface {
-	Create(ctx context.Context) error
+type IInventoryStorage interface {
+	Create(ctx context.Context, items []*Inventory) error
+	FindUserInventory(ctx context.Context, userID string) (Response, error)
+	FindUsersInventory(ctx context.Context, userIDs ...string) (map[string]Response, error)
+	UpdateBalance(ctx context.Context, userID string, item core.Item, newBalance uint32) error
+	UpdateUserInventoryAccessibility(ctx context.Context, userID string) error
 }
