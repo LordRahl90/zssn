@@ -35,6 +35,8 @@ func NewMockStore() *MockInventoryStore {
 			for _, v := range items {
 				v.ID = uuid.NewString()
 				res[v.Item] = v
+				v.Accessible = true
+				v.Balance = v.Quantity
 			}
 			mockStore[items[0].UserID] = res
 			return nil
@@ -70,7 +72,7 @@ func NewMockStore() *MockInventoryStore {
 		UpdateUserInventoryAccessibilityFunc: func(ctx context.Context, userID string) error {
 			data, ok := mockStore[userID]
 			if !ok {
-				return nil
+				return gorm.ErrRecordNotFound
 			}
 			for _, v := range data {
 				v.Accessible = false

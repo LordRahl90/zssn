@@ -15,7 +15,7 @@ import (
 )
 
 var (
-	storage = store.NewMockStore()
+	storage = NewMockStore()
 )
 
 func TestMain(m *testing.M) {
@@ -46,7 +46,7 @@ func TestCreateNewUser(t *testing.T) {
 
 func TestCreateNewUserWithError(t *testing.T) {
 	ctx := context.Background()
-	failureStore := &store.MockUserStorage{}
+	failureStore := &MockUserStorage{}
 	svc, err := New(failureStore)
 	require.NoError(t, err)
 	require.NotNil(t, svc)

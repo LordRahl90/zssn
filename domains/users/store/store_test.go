@@ -41,16 +41,6 @@ func TestNewStorageService(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, svc)
 	assert.IsType(t, &UserStorage{}, svc)
-
-	mockSvc := MockUserStorage{
-		CreateFunc: func(ctx context.Context, user *User) error {
-			user.ID = uuid.NewString()
-			return nil
-		},
-	}
-	require.NotNil(t, mockSvc)
-	svc = &mockSvc // they implement the same interface and should be swappable
-	require.NotNil(t, svc)
 }
 
 func TestCreateNewUser(t *testing.T) {

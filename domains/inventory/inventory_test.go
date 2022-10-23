@@ -117,6 +117,70 @@ func TestUpdateUserItemBalance(t *testing.T) {
 	assert.Equal(t, uint32(5000), res[core.ItemAmmunition].Balance)
 }
 
+func TestUpdateUserItemBalanceWithBadMock(t *testing.T) {
+	ctx := context.Background()
+	userID := uuid.NewString()
+	inv := newInventory(t, userID)
+	emptyStore := &MockInventoryStore{}
+	fakeMockSVC := New(emptyStore)
+
+	err := service.Create(ctx, inv)
+	require.NoError(t, err)
+
+	err = fakeMockSVC.UpdateBalance(ctx, userID, core.ItemAmmunition, 5000)
+	require.EqualError(t, err, errMockNotInitialized.Error())
+}
+
+func TestBlockUserInventory(t *testing.T) {
+	ctx := context.Background()
+
+	userID := uuid.NewString()
+	inv := newInventory(t, userID)
+	err := service.Create(ctx, inv)
+	require.NoError(t, err)
+
+	anotherUserID := uuid.NewString()
+	aInv := newInventory(t, anotherUserID)
+	err = service.Create(ctx, aInv)
+	require.NoError(t, err)
+
+	err = service.BlockUserInventory(ctx, userID)
+	require.NoError(t, err)
+
+	result, err := service.FindMultipleInventory(ctx, userID, anotherUserID)
+	res := result[userID]
+	require.NoError(t, err)
+	require.NotNil(t, res)
+	assert.Len(t, res, 4)
+	for _, v := range res {
+		assert.False(t, v.Accessible)
+	}
+
+	// let's make sure we did not accidentally block another user
+	res = result[anotherUserID]
+	require.NoError(t, err)
+	require.NotNil(t, res)
+	assert.Len(t, res, 4)
+	for _, v := range res {
+		assert.Equal(t, anotherUserID, v.UserID)
+		assert.True(t, v.Accessible)
+	}
+}
+
+func TestBlockUserAccessWithEmptyMock(t *testing.T) {
+	ctx := context.Background()
+	userID := uuid.NewString()
+	inv := newInventory(t, userID)
+	emptyStore := &MockInventoryStore{}
+	fakeMockSVC := New(emptyStore)
+
+	err := service.Create(ctx, inv)
+	require.NoError(t, err)
+
+	err = fakeMockSVC.BlockUserInventory(ctx, userID)
+	require.EqualError(t, err, errMockNotInitialized.Error())
+}
+
 func newInventory(t *testing.T, userID string) []*entities.Inventory {
 	t.Helper()
 	return []*entities.Inventory{

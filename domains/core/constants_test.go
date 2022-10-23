@@ -1,20 +1,10 @@
 package core
 
 import (
-	"os"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 )
-
-func TestMain(m *testing.M) {
-	code := 1
-	defer func() {
-		os.Exit(code)
-	}()
-
-	code = m.Run()
-}
 
 func TestStringification(t *testing.T) {
 	table := []struct {
