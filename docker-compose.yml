@@ -5,3 +5,34 @@ services:
     image: gcr.io/neurons-be-test/zssn:latest
     ports:
       - 8080:8080
+    environment:
+      ENVIRONMENT: "docker"
+      DB_HOST: zssndb
+      DB_PORT: 3306
+      DB_USERNAME: zssn_user
+      DB_PASSWORD: p@azzword
+      DB_NAME: zssn
+
+    depends_on:
+      - zssndb
+
+    networks:
+      - zssn
+
+
+  zssndb:
+    container_name: zssn-db
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_USER: zssn_user
+      MYSQL_PASSWORD: p@azzword
+      MYSQL_DATABASE: zssn
+
+    networks:
+      - zssn
+
+networks:
+  zssn:
+    driver: bridge
+    

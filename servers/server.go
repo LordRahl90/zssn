@@ -25,7 +25,7 @@ func New(db *gorm.DB) *Server {
 
 	router.Get("/health", func(c *fiber.Ctx) error {
 		env := os.Getenv("ENVIRONMENT")
-		return c.SendString("Server Environment " + env + " all green by " + time.Now().String())
+		return c.SendString("Server Environment " + env + " all green by " + time.Now().Format(time.RFC3339))
 	})
 	return &Server{
 		DB:     db,
