@@ -13,8 +13,7 @@ type TradeItem struct {
 
 // TradeItems to specify trading item the user is providing
 type TradeItems struct {
-	Seller    string      `json:"seller"`
-	Buyer     string      `json:"buyer"`
+	UserID    string      `json:"userID"`
 	Reference string      `json:"reference"`
 	Items     []TradeItem `json:"items"`
 }
@@ -31,8 +30,16 @@ type Transaction struct {
 
 // ToDBTradeItemEntities converts service entities to db entities
 func (ti *TradeItems) ToDBTradeItemEntities() *store.TradeItems {
-	st := &store.TradeItems{}
+	st := &store.TradeItems{
+		UserID: ti.UserID,
+	}
 
+	for _, v := range ti.Items {
+		st.Items = append(st.Items, store.TradeItem{
+			Item:     v.Item,
+			Quantity: v.Quantity,
+		})
+	}
 	return st
 }
 
@@ -46,4 +53,16 @@ func FromDBTransactionEntity(m *store.Transaction) *Transaction {
 		Item:      m.Item,
 		Quantity:  m.Quantity,
 	}
+}
+
+// Calculate calculates a collection of trade items based on their points and quantity
+func (t TradeItems) Calculate() (result uint32) {
+	for _, v := range t.Items {
+		pts, ok := core.ItemPoints[v.Item]
+		if !ok {
+			continue
+		}
+		result += (pts * v.Quantity)
+	}
+	return
 }

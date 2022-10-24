@@ -51,32 +51,35 @@ func TestNewWithNilDB(t *testing.T) {
 func TestCreateTransaction(t *testing.T) {
 	ctx := context.Background()
 	sellerID, buyerID := uuid.NewString(), uuid.NewString()
-	ti := newTradeItems(t, sellerID, buyerID)
+	ti := newTradeItems(t, sellerID)
+	it := newTradeItems(t, buyerID)
 
-	err := store.Execute(ctx, ti)
+	err := store.Execute(ctx, ti, it)
 	require.NoError(t, err)
 	require.NotEmpty(t, ti.Reference)
 
 	res, err := store.Details(ctx, ti.Reference)
 	require.NoError(t, err)
 	require.NotEmpty(t, res)
-	assert.Len(t, res, 3)
+	assert.Len(t, res, 6)
 }
 
 func TestTradeHistory(t *testing.T) {
 	ctx := context.Background()
 	sellerID, buyerID := uuid.NewString(), uuid.NewString()
 
-	ti := newTradeItems(t, sellerID, buyerID)
+	ti := newTradeItems(t, sellerID)
+	it := newTradeItems(t, buyerID)
 
-	err := store.Execute(ctx, ti)
+	err := store.Execute(ctx, ti, it)
 	require.NoError(t, err)
 	require.NotEmpty(t, ti.Reference)
 
 	// flip the buyer and seller
-	ti = newTradeItems(t, buyerID, sellerID)
+	ti = newTradeItems(t, buyerID)
+	it = newTradeItems(t, sellerID)
 
-	err = store.Execute(ctx, ti)
+	err = store.Execute(ctx, ti, it)
 	require.NoError(t, err)
 	require.NotEmpty(t, ti.Reference)
 	start, end := time.Now().Add(-24*time.Hour), time.Now()
@@ -90,29 +93,27 @@ func TestTradeDetails(t *testing.T) {
 	ctx := context.Background()
 	sellerID, buyerID := uuid.NewString(), uuid.NewString()
 
-	ti := newTradeItems(t, sellerID, buyerID)
+	ti := newTradeItems(t, sellerID)
+	it := newTradeItems(t, buyerID)
 
-	err := store.Execute(ctx, ti)
+	err := store.Execute(ctx, ti, it)
 	require.NoError(t, err)
 	require.NotEmpty(t, ti.Reference)
 
 	res, err := store.Details(ctx, ti.Reference)
 	require.NoError(t, err)
 	require.NotEmpty(t, res)
-	assert.Len(t, res, 3)
+	assert.Len(t, res, 6)
 
 	for _, v := range res {
 		assert.Equal(t, ti.Reference, v.Reference)
-		assert.Equal(t, ti.Buyer, v.BuyerID)
-		assert.Equal(t, ti.Seller, v.SellerID)
 	}
 }
 
-func newTradeItems(t *testing.T, buyerID, sellerID string) *TradeItems {
+func newTradeItems(t *testing.T, userID string) *TradeItems {
 	t.Helper()
 	return &TradeItems{
-		Seller: sellerID,
-		Buyer:  buyerID,
+		UserID: userID,
 		Items: []TradeItem{
 			{
 				Item:     core.ItemWater,

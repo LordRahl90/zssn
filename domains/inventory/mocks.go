@@ -34,9 +34,9 @@ func NewMockStore() *MockInventoryStore {
 			var res = make(store.Response)
 			for _, v := range items {
 				v.ID = uuid.NewString()
-				res[v.Item] = v
 				v.Accessible = true
 				v.Balance = v.Quantity
+				res[v.Item] = v
 			}
 			mockStore[items[0].UserID] = res
 			return nil

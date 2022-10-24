@@ -158,6 +158,39 @@ func TestRandomUserCannotFlag(t *testing.T) {
 	require.NotNil(t, err)
 }
 
+func TestFindMultipleUsers(t *testing.T) {
+	ctx := context.Background()
+	ids := []string{}
+	users := make(map[string]*User)
+	for i := 1; i <= 3; i++ {
+		u := newUser(t)
+		require.NoError(t, storage.Create(ctx, u))
+		ids = append(ids, u.ID)
+		users[u.ID] = u
+	}
+
+	id := ids[2]
+	res, err := storage.Find(ctx, id)
+	require.NoError(t, err)
+	assert.NotNil(t, res)
+
+	result, err := storage.FindUsers(ctx, ids...)
+	require.NoError(t, err)
+	require.NotNil(t, result)
+
+	for _, v := range ids {
+		data, ok := result[v]
+		require.True(t, ok)
+		require.NotNil(t, data)
+
+		exUser, ok := users[v]
+		require.True(t, ok)
+
+		assert.Equal(t, exUser.Name, data.Name)
+		assert.Equal(t, exUser.Email, data.Email)
+	}
+}
+
 func TestUpdateInfectedStatus(t *testing.T) {
 	ctx := context.Background()
 	infectedUser := newUser(t)

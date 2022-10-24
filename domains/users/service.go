@@ -2,6 +2,7 @@ package users
 
 import (
 	"context"
+
 	"zssn/domains/entities"
 	"zssn/domains/users/store"
 )
@@ -38,6 +39,19 @@ func (u *UserService) Find(ctx context.Context, id string) (*entities.User, erro
 		return nil, err
 	}
 	return entities.FromUserDBEntity(res), nil
+}
+
+// FindUsers implements IUserService
+func (u *UserService) FindUsers(ctx context.Context, ids ...string) (map[string]*entities.User, error) {
+	result := make(map[string]*entities.User)
+	res, err := u.Storage.FindUsers(ctx, ids...)
+	if err != nil {
+		return nil, err
+	}
+	for k, v := range res {
+		result[k] = entities.FromUserDBEntity(v)
+	}
+	return result, nil
 }
 
 // FindByEmail returns a user whose email matches the given email

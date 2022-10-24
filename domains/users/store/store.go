@@ -54,6 +54,23 @@ func (u *UserStorage) Find(ctx context.Context, id string) (*User, error) {
 	return user, err
 }
 
+// FindUsers finds array of users with the given ID
+func (u *UserStorage) FindUsers(ctx context.Context, ids ...string) (map[string]*User, error) {
+	var (
+		users  []*User
+		result = make(map[string]*User)
+	)
+	err := u.DB.Model(&User{}).Preload("FlagMonitor").Where("id IN (?)", ids).Find(&users).Error
+	if err != nil {
+		return nil, err
+	}
+
+	for _, v := range users {
+		result[v.ID] = v
+	}
+	return result, nil
+}
+
 // FindByEmail implements IUserStorage
 func (u *UserStorage) FindByEmail(ctx context.Context, email string) (*User, error) {
 	var user *User

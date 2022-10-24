@@ -9,7 +9,7 @@ import (
 type IInventoryService interface {
 	Create(ctx context.Context, item []*entities.Inventory) error
 	FindUserInventory(ctx context.Context, userID string) (map[core.Item]*entities.Inventory, error)
-	FindMultipleInventory(ctx context.Context, userIDs ...string) (map[string]map[core.Item]*entities.Inventory, error)
+	FindMultipleInventory(ctx context.Context, userIDs ...string) (entities.UserStock, error)
 	BlockUserInventory(ctx context.Context, userID string) error
 	UpdateBalance(ctx context.Context, userID string, item core.Item, newBalance uint32) error
 }

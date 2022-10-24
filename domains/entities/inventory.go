@@ -15,12 +15,19 @@ type Inventory struct {
 	Accessible bool      `json:"-"`
 }
 
+// Stock represents the amount of each item in a user's inventory
+type Stock map[core.Item]*Inventory
+
+// UserStock users stock identified by the userID
+type UserStock map[string]Stock
+
 // ToInventoryDBEntity converts from service entity to db entity
 func (i *Inventory) ToInventoryDBEntity() *store.Inventory {
 	return &store.Inventory{
-		ID:     i.ID,
-		UserID: i.UserID,
-		Item:   i.Item,
+		ID:       i.ID,
+		UserID:   i.UserID,
+		Item:     i.Item,
+		Quantity: i.Quantity,
 	}
 }
 

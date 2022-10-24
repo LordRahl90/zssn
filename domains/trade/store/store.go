@@ -28,21 +28,34 @@ func New(db *gorm.DB) (ITradeStorage, error) {
 }
 
 // Execute implements ITradeStorage
-func (ts *TradeStorage) Execute(ctx context.Context, item *TradeItems) error {
+func (ts *TradeStorage) Execute(ctx context.Context, seller, buyer *TradeItems) error {
 	ref := uuid.NewString()
 	var trans []Transaction
-	for _, v := range item.Items {
+	// build the seller items first
+	for _, v := range seller.Items {
 		// create a transaction record for every item
 		trans = append(trans, Transaction{
 			ID:        uuid.NewString(),
 			Reference: ref,
-			SellerID:  item.Seller,
-			BuyerID:   item.Buyer,
+			SellerID:  seller.UserID,
+			BuyerID:   buyer.UserID,
 			Item:      v.Item,
 			Quantity:  v.Quantity,
 		})
 	}
-	item.Reference = ref
+	for _, v := range buyer.Items {
+		// seller becomes buyer at this point and the total is calculated into inventory service
+		trans = append(trans, Transaction{
+			ID:        uuid.NewString(),
+			Reference: ref,
+			SellerID:  buyer.UserID,
+			BuyerID:   seller.UserID,
+			Item:      v.Item,
+			Quantity:  v.Quantity,
+		})
+	}
+	seller.Reference = ref
+	buyer.Reference = ref
 	return ts.DB.Create(trans).Error
 }
 

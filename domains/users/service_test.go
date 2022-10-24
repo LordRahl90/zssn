@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 	"testing"
+
 	"zssn/domains/entities"
 	"zssn/domains/users/store"
 
@@ -84,6 +85,39 @@ func TestFindUserByID(t *testing.T) {
 	assert.NotNil(t, res)
 	assert.NotEmpty(t, users)
 	assert.Equal(t, users[0].ID, res.ID)
+}
+
+func TestFindMultipleUsers(t *testing.T) {
+	ctx := context.Background()
+	svc, err := New(storage)
+	require.NoError(t, err)
+	require.NotNil(t, svc)
+
+	var (
+		ids   []string
+		users = make(map[string]*entities.User)
+	)
+
+	for i := 0; i <= 3; i++ {
+		user := newUser(t)
+		require.NoError(t, svc.Create(ctx, user))
+		ids = append(ids, user.ID)
+		users[user.ID] = user
+	}
+
+	res, err := svc.FindUsers(ctx, ids...)
+	require.NoError(t, err)
+	require.NotNil(t, res)
+
+	for k, v := range users {
+		rUser, ok := res[k]
+		require.True(t, ok)
+		require.NotNil(t, rUser)
+
+		assert.Equal(t, v.Name, rUser.Name)
+		assert.Equal(t, v.Email, rUser.Email)
+		assert.Equal(t, v.Age, rUser.Age)
+	}
 }
 
 func TestFindUserByIDFailure(t *testing.T) {

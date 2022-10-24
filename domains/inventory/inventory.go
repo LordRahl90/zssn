@@ -36,14 +36,14 @@ func (iv *InventoryService) Create(ctx context.Context, items []*entities.Invent
 }
 
 // FindMultipleInventory implements IInventoryService
-func (iv *InventoryService) FindMultipleInventory(ctx context.Context, userIDs ...string) (map[string]map[core.Item]*entities.Inventory, error) {
-	result := make(map[string]map[core.Item]*entities.Inventory)
+func (iv *InventoryService) FindMultipleInventory(ctx context.Context, userIDs ...string) (entities.UserStock, error) {
+	result := make(entities.UserStock)
 	res, err := iv.store.FindUsersInventory(ctx, userIDs...)
 	if err != nil {
 		return nil, err
 	}
 	for k, v := range res {
-		ent := make(map[core.Item]*entities.Inventory)
+		ent := make(entities.Stock)
 		for i, j := range v {
 			ent[i] = entities.FromInventoryDBEntity(j)
 		}

@@ -14,22 +14,9 @@ type TradeItem struct {
 
 // TradItems collection of trade item
 type TradeItems struct {
-	Seller    string      `json:"seller"`
-	Buyer     string      `json:"buyer"`
+	UserID    string      `json:"userID"`
 	Reference string      `json:"reference"`
 	Items     []TradeItem `json:"items"`
-}
-
-// Calculate calculates a collection of trade items based on their points and quantity
-func (t TradeItems) Calculate() (result uint32) {
-	for _, v := range t.Items {
-		pts, ok := core.ItemPoints[v.Item]
-		if !ok {
-			continue
-		}
-		result += (pts * v.Quantity)
-	}
-	return
 }
 
 // Transactions a ledger type of table that keeps a log of all the transactions
