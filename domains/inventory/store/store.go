@@ -83,5 +83,5 @@ func (inv *InventoryStore) UpdateBalance(ctx context.Context, userID string, ite
 
 // UpdateUserInventoryAccessibility implements IInventoryStore
 func (inv *InventoryStore) UpdateUserInventoryAccessibility(ctx context.Context, userID string) error {
-	return inv.DB.Model(&Inventory{}).Where("user_id = ?", userID).Update("accessible", false).Error
+	return inv.DB.Model(&Inventory{}).Where("user_id = ?", userID).Update("is_accessible", false).Error
 }

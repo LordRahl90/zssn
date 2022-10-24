@@ -16,6 +16,6 @@ type Inventory struct {
 	Item       core.Item `json:"item" gorm:"index:idx_user_item,unique"`
 	Quantity   uint32    `json:"quantity"`
 	Balance    uint32    `json:"balance"`
-	Accessible bool      `json:"-"`
+	Accessible bool      `json:"accessible" gorm:"column:is_accessible"`
 	gorm.Model
 }

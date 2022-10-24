@@ -15,7 +15,7 @@ type MockInventoryService struct {
 	BlockUserInventoryFunc    func(ctx context.Context, userID string) error
 	CreateFunc                func(ctx context.Context, item []*entities.Inventory) error
 	FindMultipleInventoryFunc func(ctx context.Context, userIDs ...string) (entities.UserStock, error)
-	FindUserInventoryFunc     func(ctx context.Context, userID string) (map[core.Item]*entities.Inventory, error)
+	FindUserInventoryFunc     func(ctx context.Context, userID string) (map[string]*entities.Inventory, error)
 	UpdateBalanceFunc         func(ctx context.Context, userID string, item core.Item, newBalance uint32) error
 }
 
@@ -50,7 +50,7 @@ func (m *MockInventoryService) FindMultipleInventory(ctx context.Context, userID
 }
 
 // FindUserInventory implements inventory.IInventoryService
-func (m *MockInventoryService) FindUserInventory(ctx context.Context, userID string) (map[core.Item]*entities.Inventory, error) {
+func (m *MockInventoryService) FindUserInventory(ctx context.Context, userID string) (map[string]*entities.Inventory, error) {
 	if m.FindUserInventoryFunc == nil {
 		return nil, errMockNotDefined
 	}

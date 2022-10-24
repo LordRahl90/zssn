@@ -2,6 +2,7 @@ package store
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -30,6 +31,7 @@ func (u *UserStorage) Create(ctx context.Context, user *User) error {
 
 // FlagUser creates a new flag record against the infected user
 func (u *UserStorage) FlagUser(ctx context.Context, id string, infectedUser string) error {
+	fmt.Printf("Flagging: %s\t%s", id, infectedUser)
 	// Not sure if user can flag themselves as infected
 	if id == infectedUser {
 		return nil

@@ -2,6 +2,7 @@ package inventory
 
 import (
 	"context"
+	"strings"
 	"zssn/domains/core"
 	"zssn/domains/entities"
 	"zssn/domains/inventory/store"
@@ -53,14 +54,14 @@ func (iv *InventoryService) FindMultipleInventory(ctx context.Context, userIDs .
 }
 
 // FindUserInventory implements IInventoryService
-func (iv *InventoryService) FindUserInventory(ctx context.Context, userID string) (map[core.Item]*entities.Inventory, error) {
+func (iv *InventoryService) FindUserInventory(ctx context.Context, userID string) (map[string]*entities.Inventory, error) {
 	res, err := iv.store.FindUserInventory(ctx, userID)
-	result := make(map[core.Item]*entities.Inventory)
+	result := make(map[string]*entities.Inventory)
 	if err != nil {
 		return nil, err
 	}
 	for k, v := range res {
-		result[k] = entities.FromInventoryDBEntity(v)
+		result[strings.ToLower(k.String())] = entities.FromInventoryDBEntity(v)
 	}
 	return result, nil
 }

@@ -38,6 +38,9 @@ func (u *UserService) Find(ctx context.Context, id string) (*entities.User, erro
 	if err != nil {
 		return nil, err
 	}
+	// if res.Infected {
+	// 	return nil, fmt.Errorf("user is infected")
+	// }
 	return entities.FromUserDBEntity(res), nil
 }
 
@@ -49,6 +52,9 @@ func (u *UserService) FindUsers(ctx context.Context, ids ...string) (map[string]
 		return nil, err
 	}
 	for k, v := range res {
+		// if v.Infected {
+		// 	return nil, fmt.Errorf("user  %s(%s) is infected", v.Name, v.Email)
+		// }
 		result[k] = entities.FromUserDBEntity(v)
 	}
 	return result, nil
@@ -68,9 +74,22 @@ func (u *UserService) UpdateLocation(ctx context.Context, id string, lat, long f
 	return u.Storage.UpdateLocation(ctx, id, lat, long)
 }
 
-// FlagUser flags a user using the storage service
-func (u *UserService) FlagUser(ctx context.Context, id, infectedUser string) error {
-	return u.Storage.FlagUser(ctx, id, infectedUser)
+// FlagUser flags a user using the storage service and if the infected user has been flagged 3 times or more
+// then the infection status of the user is updated
+func (u *UserService) FlagUser(ctx context.Context, id, infectedUserID string) error {
+	usr, err := u.Storage.Find(ctx, infectedUserID)
+	if err != nil {
+		return err
+	}
+
+	if len(usr.FlagMonitor)+1 >= 3 && !usr.Infected {
+		// update the user as infected once we get to 3 and the user hasn't been flagged already
+		if err := u.Storage.UpdateInfectedStatus(ctx, infectedUserID); err != nil {
+			return err
+		}
+	}
+
+	return u.Storage.FlagUser(ctx, id, infectedUserID)
 }
 
 // IsInfected return if a user is infected or not

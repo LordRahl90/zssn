@@ -7,6 +7,7 @@ import (
 	"zssn/servers"
 
 	"github.com/joho/godotenv"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -22,8 +23,14 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	server := servers.New(db)
+	server, err := servers.New(db)
+	if err != nil {
+		panic(err)
+	}
 
+	// server.Router.Use(requestid.New())
+	// server.Router.Use(cors.New())
+	// server.Router.Use(logger.New())
 	if err := server.Router.Listen(":8080"); err != nil {
 		log.Fatal(err)
 	}

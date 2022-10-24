@@ -19,12 +19,14 @@ var (
 	errMockNotInitialized = errors.New("mock not initialized")
 )
 
+// MockInventoryStore inventory store mock
 type MockInventoryStore struct {
 	CreateFunc                           func(ctx context.Context, items []*store.Inventory) error
 	FindUserInventoryFunc                func(ctx context.Context, userID string) (store.Response, error)
 	FindUsersInventoryFunc               func(ctx context.Context, userIDs ...string) (map[string]store.Response, error)
 	UpdateBalanceFunc                    func(ctx context.Context, userID string, item core.Item, newBalance uint32) error
 	UpdateUserInventoryAccessibilityFunc func(ctx context.Context, userID string) error
+	ReduceBalanceFunc                    func(ctx context.Context, userID string, item core.Item, qty uint32) error
 }
 
 // NewMockStore return a new mock store with prefilled functions using mockStore
@@ -115,6 +117,15 @@ func (m *MockInventoryStore) UpdateBalance(ctx context.Context, userID string, i
 		return errMockNotInitialized
 	}
 	return m.UpdateBalanceFunc(ctx, userID, item, newBalance)
+}
+
+// ReduceBalance implements store.IInventoryStorage
+func (m *MockInventoryStore) ReduceBalance(ctx context.Context, userID string, item core.Item, qty uint32) error {
+	if m.ReduceBalanceFunc == nil {
+		return errMockNotInitialized
+	}
+
+	return m.ReduceBalanceFunc(ctx, userID, item, qty)
 }
 
 // UpdateUserInventoryAccessibility implements store.IInventoryStorage

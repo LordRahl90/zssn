@@ -28,7 +28,7 @@ func New(storage store.ITradeStorage, usr users.IUserService, inv inventory.IInv
 }
 
 // Execute implements ITradeService
-func (ts *TradeService) Execute(ctx context.Context, buyer, seller *entities.TradeItems) error {
+func (ts *TradeService) Execute(ctx context.Context, seller, buyer *entities.TradeItems) error {
 	if err := ts.VerifyTransaction(ctx, seller, buyer); err != nil {
 		return err
 	}
@@ -39,6 +39,30 @@ func (ts *TradeService) Execute(ctx context.Context, buyer, seller *entities.Tra
 	}
 	seller.Reference = s.Reference
 	buyer.Reference = s.Reference
+
+	// reduce the balance from seller
+	balances, err := ts.InventoryService.FindMultipleInventory(ctx, seller.UserID, buyer.UserID)
+	if err != nil {
+		return err
+	}
+	sellerBalance := balances[seller.UserID]
+	for _, v := range s.Items {
+		dd := sellerBalance[v.Item]
+		newBalance := dd.Balance - v.Quantity
+		if err := ts.InventoryService.UpdateBalance(ctx, seller.UserID, v.Item, newBalance); err != nil {
+			return err
+		}
+	}
+
+	buyerBalance := balances[buyer.UserID]
+	for _, v := range b.Items {
+		dd := buyerBalance[v.Item]
+		newBalance := dd.Balance - v.Quantity
+		if err := ts.InventoryService.UpdateBalance(ctx, buyer.UserID, v.Item, newBalance); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 

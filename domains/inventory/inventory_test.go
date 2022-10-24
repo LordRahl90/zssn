@@ -71,7 +71,7 @@ func TestFindUserInventory(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, res)
 	assert.Len(t, res, 4)
-	assert.Equal(t, res[core.ItemWater].UserID, userID)
+	assert.Equal(t, res[core.ItemWater.String()].UserID, userID)
 }
 
 func TestFindMultipleUserInventories(t *testing.T) {
@@ -114,7 +114,7 @@ func TestUpdateUserItemBalance(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, res)
 	assert.Len(t, res, 4)
-	assert.Equal(t, uint32(5000), res[core.ItemAmmunition].Balance)
+	assert.Equal(t, uint32(5000), res[core.ItemAmmunition.String()].Balance)
 }
 
 func TestUpdateUserItemBalanceWithBadMock(t *testing.T) {
