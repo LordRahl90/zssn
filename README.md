@@ -1,7 +1,7 @@
 ## Zombie Survival Social Network
 
-* [Postman Docs](https://www.getpostman.com/collections/1fa844327cfc6b9b3894)
-* [BaseURL](https://zssn-a336s4xzcq-ew.a.run.app)
+[Postman Docs](https://www.getpostman.com/collections/1fa844327cfc6b9b3894) <br />
+[BaseURL](https://zssn-a336s4xzcq-ew.a.run.app) <br />
 
 ## Local Setup:
 Make sure docker is installed on the target machine
@@ -15,11 +15,11 @@ Make sure docker is installed on the target machine
  * RUN `make`
 
 ## Assumptions
-NB: Items are given constants:
+NB: Items are given constants: <br />
 1: Water <br />
-2: Food
-3: Medication
-4: Ammunition
+2: Food <br />
+3: Medication <br />
+4: Ammunition<br />
 
 
 ## API Documentation:
