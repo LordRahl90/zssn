@@ -115,7 +115,7 @@ func TestUpdateUserItemBalance(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, res)
 	assert.Len(t, res, 4)
-	assert.Equal(t, uint32(5000), res[core.ItemAmmunition.String()].Balance)
+	assert.Equal(t, uint32(5000), res["ammunition"].Balance)
 }
 
 func TestUpdateUserItemBalanceWithBadMock(t *testing.T) {

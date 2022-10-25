@@ -38,9 +38,7 @@ func (u *UserService) Find(ctx context.Context, id string) (*entities.User, erro
 	if err != nil {
 		return nil, err
 	}
-	// if res.Infected {
-	// 	return nil, fmt.Errorf("user is infected")
-	// }
+
 	return entities.FromUserDBEntity(res), nil
 }
 
@@ -52,9 +50,6 @@ func (u *UserService) FindUsers(ctx context.Context, ids ...string) (map[string]
 		return nil, err
 	}
 	for k, v := range res {
-		// if v.Infected {
-		// 	return nil, fmt.Errorf("user  %s(%s) is infected", v.Name, v.Email)
-		// }
 		result[k] = entities.FromUserDBEntity(v)
 	}
 	return result, nil
