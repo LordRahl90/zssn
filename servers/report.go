@@ -2,6 +2,7 @@ package servers
 
 import (
 	"net/http"
+	"zssn/domains/entities"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -46,8 +47,12 @@ func averageResourceShare(ctx *fiber.Ctx) error {
 			"error":   err.Error(),
 		})
 	}
+	var resp []*entities.ResourceSharing
+	for _, v := range res {
+		resp = append(resp, v)
+	}
 
-	return ctx.Status(http.StatusOK).JSON(res)
+	return ctx.Status(http.StatusOK).JSON(resp)
 }
 
 func lostPoints(ctx *fiber.Ctx) error {
