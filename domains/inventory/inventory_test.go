@@ -3,6 +3,7 @@ package inventory
 import (
 	"context"
 	"os"
+	"strings"
 	"testing"
 	"zssn/domains/core"
 	"zssn/domains/entities"
@@ -71,7 +72,7 @@ func TestFindUserInventory(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, res)
 	assert.Len(t, res, 4)
-	assert.Equal(t, res[core.ItemWater.String()].UserID, userID)
+	assert.Equal(t, res[strings.ToLower(core.ItemWater.String())].UserID, userID)
 }
 
 func TestFindMultipleUserInventories(t *testing.T) {
