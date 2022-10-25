@@ -3,6 +3,7 @@ package servers
 import (
 	"net/http"
 	"strings"
+
 	"zssn/domains/entities"
 
 	"github.com/gofiber/fiber/v2"

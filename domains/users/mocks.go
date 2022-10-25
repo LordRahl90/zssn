@@ -3,6 +3,7 @@ package users
 import (
 	"context"
 	"errors"
+
 	"zssn/domains/users/store"
 
 	"github.com/google/uuid"

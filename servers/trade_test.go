@@ -171,20 +171,3 @@ func TestExecuteTradeInvalidJSON(t *testing.T) {
 	res := handleReqest(t, http.MethodPost, "/trades", user2.Token, b)
 	require.Equal(t, http.StatusBadRequest, res.StatusCode)
 }
-
-// func newTradeItems(t *testing.T, userID string) *requests.TradeItems {
-// 	t.Helper()
-// 	return &requests.TradeItems{
-// 		UserID: userID,
-// 		Items: []requests.TradeItem{
-// 			{
-// 				Item:     core.ItemWater,
-// 				Quantity: 1,
-// 			},
-// 			{
-// 				Item:     core.ItemFood,
-// 				Quantity: 2,
-// 			},
-// 		},
-// 	}
-// }

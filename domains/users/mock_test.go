@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"testing"
+
 	"zssn/domains/users/store"
 
 	"github.com/brianvoe/gofakeit"

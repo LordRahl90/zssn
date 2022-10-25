@@ -2,6 +2,7 @@ package users
 
 import (
 	"context"
+
 	"zssn/domains/entities"
 )
 

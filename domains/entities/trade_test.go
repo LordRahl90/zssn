@@ -2,6 +2,7 @@ package entities
 
 import (
 	"testing"
+
 	"zssn/domains/core"
 
 	"github.com/stretchr/testify/assert"
