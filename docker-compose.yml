@@ -9,12 +9,13 @@ services:
       ENVIRONMENT: "docker"
       DB_HOST: zssndb
       DB_PORT: 3306
-      DB_USERNAME: zssn_user
+      DB_USER: zssn_user
       DB_PASSWORD: p@azzword
       DB_NAME: zssn
 
     depends_on:
-      - zssndb
+      zssndb:
+        condition: service_healthy
 
     networks:
       - zssn
@@ -31,6 +32,12 @@ services:
 
     networks:
       - zssn
+
+    healthcheck: # check the healthiness with the following configuration
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost', '--user=zssn_user', '--password=p@azzword']
+      interval: 3s
+      timeout: 3s
+      retries: 5
 
 networks:
   zssn:
