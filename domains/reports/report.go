@@ -61,10 +61,14 @@ func (rs *ReportService) ResourceSharing(ctx context.Context) (map[string]*entit
 	result := make(map[string]*entities.ResourceSharing)
 
 	for k, v := range resources {
+		var pcr uint32
+		if surviors.Clean > 0 {
+			pcr = v.Balance / surviors.Clean
+		}
 		result[k.String()] = &entities.ResourceSharing{
 			Item:        k.String(),
 			Balance:     v.Balance,
-			PerSurvivor: v.Balance / surviors.Clean,
+			PerSurvivor: pcr,
 		}
 	}
 
