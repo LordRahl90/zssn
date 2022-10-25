@@ -1,17 +1,22 @@
 ## Zombie Survival Social Network
 
-[Postman Docs](https://www.getpostman.com/collections/1fa844327cfc6b9b3894)
-[BaseURL](https://zssn-a336s4xzcq-ew.a.run.app)
+* [Postman Docs](https://www.getpostman.com/collections/1fa844327cfc6b9b3894)
+* [BaseURL](https://zssn-a336s4xzcq-ew.a.run.app)
 
 ## Local Setup:
-* Make sure docker is installed on the target machine
+Make sure docker is installed on the target machine
 * Clone Repository
+
+## Steps
 * RUN `make bi` to build the docker image
 * RUN `docker-compose up` to start the service and the accompanying mysql database
 
+## OR
+ * RUN `make`
+
 ## Assumptions
 NB: Items are given constants:
-1: Water
+1: Water <br />
 2: Food
 3: Medication
 4: Ammunition

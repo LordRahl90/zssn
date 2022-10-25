@@ -1,3 +1,7 @@
+.PHONY: bi
+all: bi
+	docker-compose up
+
 start:
 	@go run ./cmd/
 
