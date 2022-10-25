@@ -99,7 +99,10 @@ func newUser(ctx *fiber.Ctx) error {
 		Longitude: u.Longitude,
 	}
 	if err := userService.Create(ctx.Context(), user); err != nil {
-		return err
+		return ctx.Status(http.StatusBadRequest).JSON(fiber.Map{
+			"success": false,
+			"error":   err.Error(),
+		})
 	}
 
 	var invItems []*entities.Inventory
@@ -112,7 +115,10 @@ func newUser(ctx *fiber.Ctx) error {
 	}
 
 	if err := inventoryService.Create(ctx.Context(), invItems); err != nil {
-		return err
+		return ctx.Status(http.StatusBadRequest).JSON(fiber.Map{
+			"success": false,
+			"error":   err.Error(),
+		})
 	}
 	td := core.TokenData{
 		UserID: user.ID,
@@ -120,7 +126,10 @@ func newUser(ctx *fiber.Ctx) error {
 	}
 	token, err := td.Generate()
 	if err != nil {
-		return err
+		return ctx.Status(http.StatusBadRequest).JSON(fiber.Map{
+			"success": false,
+			"error":   err.Error(),
+		})
 	}
 	return ctx.Status(http.StatusCreated).JSON(responses.FromUserEntity(user, token))
 }
