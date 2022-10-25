@@ -2,6 +2,7 @@ package servers
 
 import (
 	"net/http"
+	"strings"
 	"zssn/domains/entities"
 
 	"github.com/gofiber/fiber/v2"
@@ -49,6 +50,7 @@ func averageResourceShare(ctx *fiber.Ctx) error {
 	}
 	var resp []*entities.ResourceSharing
 	for _, v := range res {
+		v.Item = strings.ToLower(v.Item)
 		resp = append(resp, v)
 	}
 
