@@ -27,6 +27,7 @@ type MockInventoryStore struct {
 	UpdateBalanceFunc                    func(ctx context.Context, userID string, item core.Item, newBalance uint32) error
 	UpdateUserInventoryAccessibilityFunc func(ctx context.Context, userID string) error
 	ReduceBalanceFunc                    func(ctx context.Context, userID string, item core.Item, qty uint32) error
+	UpdateMultipleBalanceFunc            func(ctx context.Context, userID string, items map[core.Item]uint32) error
 }
 
 // NewMockStore return a new mock store with prefilled functions using mockStore
@@ -126,6 +127,13 @@ func (m *MockInventoryStore) ReduceBalance(ctx context.Context, userID string, i
 	}
 
 	return m.ReduceBalanceFunc(ctx, userID, item, qty)
+}
+
+func (m *MockInventoryStore) UpdateMultipleBalance(ctx context.Context, userID string, items map[core.Item]uint32) error {
+	if m.UpdateMultipleBalanceFunc == nil {
+		return errMockNotInitialized
+	}
+	return m.UpdateMultipleBalanceFunc(ctx, userID, items)
 }
 
 // UpdateUserInventoryAccessibility implements store.IInventoryStorage

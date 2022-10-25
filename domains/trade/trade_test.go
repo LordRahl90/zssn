@@ -247,7 +247,10 @@ func TestVerifyTransaction(t *testing.T) {
 		},
 	}
 
-	err := tradeService.VerifyTransaction(ctx, fut, sut)
+	balances, err := inventoryService.FindMultipleInventory(ctx, fut.UserID, sut.UserID)
+	require.NoError(t, err)
+
+	err = tradeService.VerifyTransaction(ctx, balances, fut, sut)
 	require.NoError(t, err)
 }
 

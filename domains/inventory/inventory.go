@@ -71,6 +71,11 @@ func (iv *InventoryService) UpdateBalance(ctx context.Context, userID string, it
 	return iv.store.UpdateBalance(ctx, userID, item, newBalance)
 }
 
+// UpdateMultipleBalance implements IInventoryService
+func (iv *InventoryService) UpdateMultipleBalance(ctx context.Context, userID string, items map[core.Item]uint32) error {
+	panic("unimplemented")
+}
+
 // BlockUserInventory implements IInventoryService
 func (iv *InventoryService) BlockUserInventory(ctx context.Context, userID string) error {
 	return iv.store.UpdateUserInventoryAccessibility(ctx, userID)

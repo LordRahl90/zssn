@@ -12,4 +12,5 @@ type IInventoryService interface {
 	FindMultipleInventory(ctx context.Context, userIDs ...string) (entities.UserStock, error)
 	BlockUserInventory(ctx context.Context, userID string) error
 	UpdateBalance(ctx context.Context, userID string, item core.Item, newBalance uint32) error
+	UpdateMultipleBalance(ctx context.Context, userID string, items map[core.Item]uint32) error
 }

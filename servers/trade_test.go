@@ -5,9 +5,10 @@ import (
 	"encoding/json"
 	"net/http"
 	"testing"
+
 	"zssn/domains/core"
-	"zssn/domains/entities"
 	"zssn/requests"
+	"zssn/responses"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -56,7 +57,7 @@ func TestNewTrade(t *testing.T) {
 	res := handleReqest(t, http.MethodPost, "/trades", user1.Token, b)
 	require.Equal(t, http.StatusCreated, res.StatusCode)
 
-	var result map[string]*entities.Inventory
+	var result *responses.Trade
 	err = json.NewDecoder(res.Body).Decode(&result)
 	require.NoError(t, err)
 
@@ -74,9 +75,22 @@ func TestNewTrade(t *testing.T) {
 	assert.NotEqual(t, medicRec.Balance, medicRec.Quantity)
 	assert.Equal(t, medicRec.Balance+1, medicRec.Quantity)
 
+	ammoRec := rst[core.ItemAmmunition]
+	assert.NotEqual(t, ammoRec.Balance, ammoRec.Quantity)
+	assert.Equal(t, ammoRec.Balance-6, ammoRec.Quantity)
+
 	rst = participantsInventory[tr2.UserID]
-	ammRec := rst[core.ItemAmmunition]
-	assert.Equal(t, ammRec.Balance+6, ammRec.Quantity)
+
+	ammoRec = rst[core.ItemAmmunition]
+	assert.Equal(t, ammoRec.Balance+6, ammoRec.Quantity)
+
+	waterRec = rst[core.ItemWater]
+	assert.NotEqual(t, waterRec.Balance, waterRec.Quantity)
+	assert.Equal(t, waterRec.Balance-1, waterRec.Quantity)
+
+	medicRec = rst[core.ItemMedication]
+	assert.NotEqual(t, medicRec.Balance, medicRec.Quantity)
+	assert.Equal(t, medicRec.Balance-1, medicRec.Quantity)
 }
 
 func TestUnequalTrade(t *testing.T) {

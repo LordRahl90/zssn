@@ -13,5 +13,5 @@ type ITradeService interface {
 	IsTransactionAmountEqual(sellerItem, buyerItem *entities.TradeItems) error
 	AnyParticipantInfected(users ...*entities.User) error
 	EnoughStock(stock entities.Stock, items *entities.TradeItems) error
-	VerifyTransaction(ctx context.Context, sellerItem, buyerItem *entities.TradeItems) error
+	VerifyTransaction(ctx context.Context, balances entities.UserStock, sellerItem, buyerItem *entities.TradeItems) error
 }

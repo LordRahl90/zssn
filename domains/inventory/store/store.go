@@ -81,6 +81,11 @@ func (inv *InventoryStore) UpdateBalance(ctx context.Context, userID string, ite
 	return inv.DB.Model(&Inventory{}).Where("user_id = ? AND item = ?", userID, item).Update("balance", newBalance).Error
 }
 
+// UpdateMultipleBalance implements IInventoryStorage
+func (*InventoryStore) UpdateMultipleBalance(ctx context.Context, userID string, items map[core.Item]uint32) error {
+	panic("unimplemented")
+}
+
 // UpdateUserInventoryAccessibility implements IInventoryStore
 func (inv *InventoryStore) UpdateUserInventoryAccessibility(ctx context.Context, userID string) error {
 	return inv.DB.Model(&Inventory{}).Where("user_id = ?", userID).Update("is_accessible", false).Error

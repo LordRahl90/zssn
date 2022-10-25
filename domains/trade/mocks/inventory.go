@@ -17,6 +17,7 @@ type MockInventoryService struct {
 	FindMultipleInventoryFunc func(ctx context.Context, userIDs ...string) (entities.UserStock, error)
 	FindUserInventoryFunc     func(ctx context.Context, userID string) (map[string]*entities.Inventory, error)
 	UpdateBalanceFunc         func(ctx context.Context, userID string, item core.Item, newBalance uint32) error
+	UpdateMultipleBalanceFunc func(ctx context.Context, userID string, items map[core.Item]uint32) error
 }
 
 // NewInventoryMock returns a new mock implementation using in-memory db
@@ -63,4 +64,12 @@ func (m *MockInventoryService) UpdateBalance(ctx context.Context, userID string,
 		return errMockNotDefined
 	}
 	return m.UpdateBalanceFunc(ctx, userID, item, newBalance)
+}
+
+// UpdateMultipleBalance implements IInventoryService
+func (m *MockInventoryService) UpdateMultipleBalance(ctx context.Context, userID string, items map[core.Item]uint32) error {
+	if m.UpdateMultipleBalanceFunc == nil {
+		return errMockNotDefined
+	}
+	return m.UpdateMultipleBalanceFunc(ctx, userID, items)
 }

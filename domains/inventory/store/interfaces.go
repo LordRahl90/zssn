@@ -11,5 +11,6 @@ type IInventoryStorage interface {
 	FindUserInventory(ctx context.Context, userID string) (Response, error)
 	FindUsersInventory(ctx context.Context, userIDs ...string) (map[string]Response, error)
 	UpdateBalance(ctx context.Context, userID string, item core.Item, newBalance uint32) error
+	UpdateMultipleBalance(ctx context.Context, userID string, items map[core.Item]uint32) error
 	UpdateUserInventoryAccessibility(ctx context.Context, userID string) error
 }
