@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"zssn/requests"
+	"zssn/responses"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -57,8 +58,17 @@ func newTrade(ctx *fiber.Ctx) error {
 			"error":   err.Error(),
 		})
 	}
+	var resp []*responses.Inventory
+	for _, v := range balance {
+		resp = append(resp, &responses.Inventory{
+			Item:     v.Item.String(),
+			Quantity: v.Quantity,
+			Balance:  v.Balance,
+		})
+	}
 
 	return ctx.Status(http.StatusCreated).JSON(fiber.Map{
-		"balance": balance,
+		"reference": buyer.Reference,
+		"balance":   resp,
 	})
 }

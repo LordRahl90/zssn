@@ -46,19 +46,36 @@ func (ts *TradeService) Execute(ctx context.Context, seller, buyer *entities.Tra
 		return err
 	}
 	sellerBalance := balances[seller.UserID]
+	buyerBalance := balances[buyer.UserID]
 	for _, v := range s.Items {
 		dd := sellerBalance[v.Item]
 		newBalance := dd.Balance - v.Quantity
 		if err := ts.InventoryService.UpdateBalance(ctx, seller.UserID, v.Item, newBalance); err != nil {
 			return err
 		}
+
+		// get the buyer's balance of this same item
+		bb := buyerBalance[v.Item]
+		newBalance = bb.Balance + v.Quantity
+		fmt.Printf("BB Item: %s\t Qty: %d", v.Item.String(), newBalance)
+		// increase the buyer's balance here
+		if err := ts.InventoryService.UpdateBalance(ctx, buyer.UserID, v.Item, newBalance); err != nil {
+			return err
+		}
 	}
 
-	buyerBalance := balances[buyer.UserID]
 	for _, v := range b.Items {
 		dd := buyerBalance[v.Item]
 		newBalance := dd.Balance - v.Quantity
 		if err := ts.InventoryService.UpdateBalance(ctx, buyer.UserID, v.Item, newBalance); err != nil {
+			return err
+		}
+
+		// get the buyer's balance of this same item
+		sb := sellerBalance[v.Item]
+		newBalance = sb.Balance + v.Quantity
+		// increase the buyer's balance here
+		if err := ts.InventoryService.UpdateBalance(ctx, seller.UserID, v.Item, newBalance); err != nil {
 			return err
 		}
 	}

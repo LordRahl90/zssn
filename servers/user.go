@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"strings"
 	"zssn/domains/core"
 	"zssn/domains/entities"
 	"zssn/domains/users"
@@ -143,6 +144,16 @@ func userDetails(ctx *fiber.Ctx) error {
 		}
 	}
 
+	balance, err := inventoryService.FindUserInventory(ctx.Context(), user.ID)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return ctx.Status(http.StatusNotFound).JSON(fiber.Map{
+				"success": false,
+				"error":   "invalid user",
+			})
+		}
+	}
+
 	td := core.TokenData{
 		UserID: user.ID,
 		Email:  user.Email,
@@ -151,7 +162,16 @@ func userDetails(ctx *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return ctx.Status(http.StatusOK).JSON(responses.FromUserEntity(user, tk))
+	resp := responses.FromUserEntity(user, tk)
+	for _, v := range balance {
+		resp.Inventory = append(resp.Inventory, &responses.Inventory{
+			Item:     strings.ToLower(v.Item.String()),
+			Quantity: v.Quantity,
+			Balance:  v.Balance,
+		})
+	}
+
+	return ctx.Status(http.StatusOK).JSON(resp)
 }
 
 func newToken(ctx *fiber.Ctx) error {
