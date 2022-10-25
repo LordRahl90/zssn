@@ -93,6 +93,9 @@ func (ts *TradeService) AnyParticipantInfected(users ...*entities.User) error {
 		return fmt.Errorf("invalid users provided")
 	}
 	for _, v := range users {
+		if v == nil {
+			return fmt.Errorf("one of the participants is invalid")
+		}
 		if v.Infected {
 			return fmt.Errorf("participant %s is infected, cannot proceed with transaction", v.Name)
 		}
@@ -131,6 +134,10 @@ func (ts *TradeService) VerifyTransaction(ctx context.Context, sellerItem *entit
 	users, err := ts.UserService.FindUsers(ctx, sellerItem.UserID, buyerItem.UserID)
 	if err != nil {
 		return err
+	}
+	if len(users) < 2 {
+		// means one of the participants is not a user anymore
+		return fmt.Errorf("a participant has been removed or is invalid")
 	}
 
 	// confirm none of the participants have been infected

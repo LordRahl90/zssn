@@ -2,7 +2,7 @@ start:
 	@go run ./cmd/
 
 test:
-	@go test ./... -v --cover
+	@go test ./... --cover
 
 build-image:
 	@docker build -t gcr.io/neurons-be-test/zssn:latest .
