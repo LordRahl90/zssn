@@ -85,6 +85,11 @@ func TestNewTokenForUser(t *testing.T) {
 	// infected user tries to update location
 	res := handleReqest(t, http.MethodPost, "/users/new-token", "", b)
 	require.Equal(t, http.StatusOK, res.StatusCode)
+
+	var result *responses.User
+	err = json.NewDecoder(res.Body).Decode(&result)
+	require.NoError(t, err)
+
 }
 
 func TestCreateUserWithInvalidData(t *testing.T) {
